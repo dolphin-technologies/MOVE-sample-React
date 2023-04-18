@@ -1,0 +1,59 @@
+{
+	"expo": {
+		"name": "SAMPLE APP MOVE",
+		"slug": "sample-app-move",
+		"version": "1.0.0",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "cover",
+			"backgroundColor": "#ffffff"
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true,
+			"infoPlist": {
+				"NSLocationAlwaysAndWhenInUseUsageDescription": "App requires NSLocationAlwaysAndWhenInUseUsageDescription",
+				"NSLocationAlwaysUsageDescription": "App requires NSLocationAlwaysUsageDescription",
+				"NSLocationWhenInUseUsageDescription": "App requires NSLocationWhenInUseUsageDescription",
+				"NSMotionUsageDescription": "App requires NSMotionUsageDescription",
+				"NSLocationTemporaryUsageDescriptionDictionary": {
+					"LOCATION-ACCURACY": "App requires NSLocationTemporaryUsageDescriptionDictionary"
+				},
+				"UIStatusBarStyle": "UIStatusBarStyleLightContent"
+			},
+			"bundleIdentifier": "in.dolph.sample.test.move"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"permissions": ["ACCESS_BACKGROUND_LOCATION", "ACCESS_FINE_LOCATION", "ACTIVITY_RECOGNITION", "READ_PHONE_STATE"],
+			"package": "in.dolph.sample.test.move"
+		},
+		"androidStatusBar": {
+			"translucent": true,
+			"barStyle": "light-content"
+		},
+		"plugins": [
+			"./plugins/move/index.js",
+			[
+				"expo-build-properties",
+				{
+					"android": {
+						"minSdkVersion": 26,
+						"kotlinVersion": "1.7.10",
+						"compileSdkVersion": 33,
+						"targetSdkVersion": 33
+					}
+				}
+			]
+		],
+		"extra": {
+			"url": "https://sdk.dolph.in/v20/auth/register",
+			"token": "YOUR API TOKEN HERE"
+		}
+	}
+}
