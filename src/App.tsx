@@ -7,7 +7,7 @@ import Permissions from './components/Permissions';
 import CurrentMoveState from './components/CurrentMoveState';
 
 const App = () => {
-	const { appState, sdkState, tripState, authState } = useMoveSdk();
+	const { appState, sdkState, tripState } = useMoveSdk();
 
 	return (
 		<>
@@ -27,10 +27,6 @@ const App = () => {
 						<Text>
 							<Text style={{ fontWeight: 'bold' }}>SDK TRIP STATE: </Text>
 							{tripState}
-						</Text>
-						<Text>
-							<Text style={{ fontWeight: 'bold' }}>SDK AUTH STATE: </Text>
-							{authState}
 						</Text>
 					</View>
 					<View style={{ marginBottom: 40 }}>
