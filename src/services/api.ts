@@ -1,4 +1,4 @@
 import Constants from 'expo-constants';
 
-export const URL = Constants.manifest?.extra?.url;
-export const API_TOKEN = Constants.manifest?.extra?.token;
+export const URL = Constants.expoConfig?.extra?.url;
+export const API_TOKEN = Constants.expoConfig?.extra?.token;

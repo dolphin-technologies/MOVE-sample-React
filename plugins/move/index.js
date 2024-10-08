@@ -2,7 +2,7 @@
 const { resolve } = require('path');
 const { readFileSync, writeFileSync } = require('fs');
 
-const { withDangerousMod, withPlugins, withAppDelegate, withMainApplication, withProjectBuildGradle } = require('@expo/config-plugins');
+const { withPlugins, withAppDelegate, withMainApplication, withProjectBuildGradle, withMainActivity } = require('@expo/config-plugins');
 
 function withMoveAppDelegate(config) {
 	return withAppDelegate(config, (cfg) => {
@@ -37,21 +37,42 @@ function withMoveMainApplication(config) {
 		const lines = contents.split('\n');
 
 		const importIndex = lines.findIndex((line) => /^package/.test(line));
-
-		const mainApplicationIndex = lines.findIndex((line) => /^public class MainApplication extends Application implements ReactApplication {$/.test(line));
+		if (importIndex !== -1) {
+			// Replace 'in' with '`in`' in the package name
+			lines[importIndex] = lines[importIndex].replace('package in', 'package `in`');
+		}
+		const mainApplicationIndex = lines.findIndex((line) => /^class MainApplication : Application\(\), ReactApplication {$/.test(line));
 
 		const onCreateIndex = lines.findIndex((line) => /super.onCreate\(\)/.test(line));
 
 		modResults.contents = [
 			...lines.slice(0, importIndex + 1),
-			`import in.dolph.move.sdk.NativeMoveSdkWrapper;`,
+			`import \`in\`.dolph.move.sdk.NativeMoveSdkWrapper`,
 			...lines.slice(importIndex + 1, mainApplicationIndex + 1),
-			`	private NativeMoveSdkWrapper sdkWrapper;`,
+			`	private lateinit var sdkWrapper: NativeMoveSdkWrapper`,
 			...lines.slice(mainApplicationIndex + 1, onCreateIndex + 1),
-			`		sdkWrapper = NativeMoveSdkWrapper.getInstance(this);`,
-			`		sdkWrapper.init(this);`,
+			`		sdkWrapper = NativeMoveSdkWrapper.getInstance(this)`,
+			`		sdkWrapper.init(this)`,
 			...lines.slice(onCreateIndex + 1),
 		].join('\n');
+
+		return cfg;
+	});
+}
+
+function withMoveMainActivity(config) {
+	return withMainActivity(config, (cfg) => {
+		const { modResults } = cfg;
+		const { contents } = modResults;
+		const lines = contents.split('\n');
+
+		const importIndex = lines.findIndex((line) => /^package/.test(line));
+		if (importIndex !== -1) {
+			// Replace 'in' with '`in`' in the package name
+			lines[importIndex] = lines[importIndex].replace('package in', 'package `in`');
+		}
+
+		modResults.contents = lines.join('\n');
 
 		return cfg;
 	});
@@ -81,7 +102,7 @@ function withMoveProjectBuildGradle(config) {
 }
 
 function withMove(config) {
-	return withPlugins(config, [withMoveAppDelegate, withMoveMainApplication, withMoveProjectBuildGradle]);
+	return withPlugins(config, [withMoveAppDelegate, withMoveMainApplication, withMoveMainActivity, withMoveProjectBuildGradle]);
 }
 
 module.exports = withMove;

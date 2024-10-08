@@ -4,6 +4,7 @@
 		"slug": "sample-app-move",
 		"version": "1.0.0",
 		"orientation": "portrait",
+		"privacy": "hidden",
 		"icon": "./assets/icon.png",
 		"splash": {
 			"image": "./assets/splash.png",
@@ -45,14 +46,20 @@
 					"android": {
 						"minSdkVersion": 26,
 						"kotlinVersion": "1.7.10",
-						"compileSdkVersion": 33,
-						"targetSdkVersion": 33
+						"compileSdkVersion": 34,
+						"targetSdkVersion": 34
 					}
+				}
+			],
+			[
+				"react-native-permissions",
+				{
+					"iosPermissions": ["LocationAlways", "Motion", "LocationWhenInUse", "LocationAccuracy"]
 				}
 			]
 		],
 		"extra": {
-			"url": "https://sdk.dolph.in/v20/auth/register",
+			"url": "https://sdk.dolph.in/v20/user/authcode",
 			"token": "YOUR API TOKEN HERE"
 		}
 	}

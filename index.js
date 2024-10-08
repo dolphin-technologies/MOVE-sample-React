@@ -3,7 +3,7 @@ import { registerRootComponent } from 'expo';
 import App from './src/App';
 import MoveSdk from './src/services/MoveSdk';
 
-MoveSdk.initMoveSdk();
+MoveSdk.initMoveSdkWithCode();
 
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,

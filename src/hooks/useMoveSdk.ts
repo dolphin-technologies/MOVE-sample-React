@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
-import MoveSdk, { ErrorListType, SdkState, TripState } from 'react-native-move-sdk';
+import MoveSdk, { AuthState, AuthStateEvent, ErrorListType, SdkState, TripState, WarningListType } from 'react-native-move-sdk';
+import { initMoveSdkWithCode } from '../services/MoveSdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { initMoveSdk } from '../services/MoveSdk';
 
 const useMoveSdk = () => {
 	const [appState, setAppState] = useState(AppState.currentState);
@@ -27,16 +27,16 @@ const useMoveSdk = () => {
 			const sdkState: SdkState = await MoveSdk.getState();
 			const tripState: TripState = await MoveSdk.getTripState();
 			const isAuthValid = await MoveSdk.isAuthValid();
-			const warnings: ErrorListType = await MoveSdk.getWarnings();
+			const warnings: WarningListType = await MoveSdk.getWarnings();
 			const errors: ErrorListType = await MoveSdk.getErrors();
 			setSdkState(sdkState);
 			setTripState(tripState);
 
-			if (!isAuthValid) {
+			if (!isAuthValid && sdkState !== MoveSdk.UNINITIALIZED) {
 				try {
 					await MoveSdk.shutdown(true);
-					await AsyncStorage.multiRemove(['userId', 'projectId', 'accessToken', 'refreshToken']);
-					await initMoveSdk();
+					await AsyncStorage.multiRemove(['userId']);
+					await initMoveSdkWithCode();
 				} catch (err) {
 					console.log(err);
 				}

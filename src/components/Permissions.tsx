@@ -37,11 +37,11 @@ const Permissions = ({ appState }: PermissionsProps) => {
 						title={'LOCATION'}
 						description={'MOVE needs the location permission to track user trips and activities'}
 						permission={PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION}
-						additionalPermission={Platform.Version >= 29 ? PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION : null}
+						additionalPermission={Platform.OS === 'android' && Platform.Version >= 29 ? PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION : null}
 						appState={appState}
 					/>
 
-					{Platform.Version >= 29 && (
+					{Platform.OS === 'android' && Platform.Version >= 29 && (
 						<PermissionItem
 							title={'MOTION'}
 							description={'MOVE needs the motion permission in order to record walking activities, please grant access to your fitness & motion data.'}
@@ -57,7 +57,7 @@ const Permissions = ({ appState }: PermissionsProps) => {
 						appState={appState}
 					/>
 
-					{Platform.Version >= 23 && (
+					{Platform.OS === 'android' && Platform.Version >= 23 && (
 						<>
 							<PermissionItem
 								title={'Display over other Apps'}

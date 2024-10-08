@@ -4,7 +4,8 @@ import { Platform } from 'react-native';
 import { check, Permission, PERMISSIONS } from 'react-native-permissions';
 
 import { ANDROID_CONFIG, CONFIG } from '../config/MoveSdkConfig';
-import { getMoveSdkData } from './user';
+import { getUserAuthCode } from './user';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const checkPermissions = async () => {
 	const iosPermissions: Array<Permission> = [PERMISSIONS.IOS.LOCATION_ALWAYS];
@@ -46,24 +47,25 @@ export const checkPermissions = async () => {
 	return hasPermissions;
 };
 
-export async function initMoveSdk() {
+export async function initMoveSdkWithCode() {
 	const initialState = await MoveSdk.getState();
 
+	let userId = await AsyncStorage.getItem('userId');
+
+	if (!userId) {
+		userId = Math.random().toString().substring(2, 9);
+		await AsyncStorage.setItem('userId', userId);
+	}
+
 	if (initialState === MoveSdk.UNINITIALIZED) {
-		const { userId, accessToken, refreshToken, projectId } = await getMoveSdkData();
-		const auth: MoveSdkAuth = {
-			userId: userId,
-			accessToken: accessToken,
-			refreshToken: refreshToken,
-			projectId: +projectId,
-		};
+		const { authCode } = await getUserAuthCode(userId);
 
 		try {
-			await MoveSdk.setup(CONFIG, auth, ANDROID_CONFIG);
+			await MoveSdk.setupWithCode(authCode, CONFIG, ANDROID_CONFIG);
 		} catch (error) {
 			console.log('MoveSdk error', error);
 		}
 	}
 }
 
-export default { checkPermissions, initMoveSdk };
+export default { checkPermissions, initMoveSdkWithCode };
